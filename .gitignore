@@ -12,6 +12,7 @@ build
 # Environment — never commit real keys
 .env
 .env.local
+.env.example
 .env.*.local
 
 # Editors
