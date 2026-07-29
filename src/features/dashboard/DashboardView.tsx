@@ -4,19 +4,23 @@ import { Card, CardHeader } from '@/components/ui/Card'
 import { SkeletonRows } from '@/components/ui/Skeleton'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { LiveBadge } from '@/components/ui/LiveBadge'
+import { ProgressBar } from '@/components/ui/ProgressBar'
 import { CountdownCard } from './CountdownCard'
 import { MilestoneList } from './MilestoneList'
+import { PhaseTimeline } from './PhaseTimeline'
 import { StatWidget } from './StatWidgets'
 import { useMilestones, useSlaMetrics } from '@/hooks/usePortalData'
 import { useTenant } from '@/providers/TenantProvider'
-import { formatCurrency, formatDate } from '@/lib/format'
+import { engagementWeek, formatCurrency, formatDate } from '@/lib/format'
 
 export function DashboardView() {
   const { client } = useTenant()
-  const { data: milestones, loading, error, refresh } = useMilestones()
+  const { data: milestones, loading, error, refresh, live } = useMilestones()
   const { data: slaRows } = useSlaMetrics()
 
   const sla = slaRows[0]
+  const week = engagementWeek(client?.engagement_start, client?.uat_review_at)
 
   // Overall delivery is the mean of milestone progress — every phase in the
   // BRD table carries comparable weight, so an unweighted mean is honest.
@@ -35,10 +39,17 @@ export function DashboardView() {
       <PageHeader
         eyebrow="Overview"
         title={client ? `${client.name} delivery dashboard` : 'Delivery dashboard'}
-        description={
-          client?.engagement_title
-            ? `${client.engagement_title}. Milestone progress updates in real time as the VybzTech team advances each phase.`
-            : 'Milestone progress updates in real time.'
+        description={client?.engagement_title ?? undefined}
+        action={
+          week ? (
+            <div className="rounded-lg border border-hairline bg-canvas-raised px-4 py-2.5 text-right">
+              <p className="eyebrow">Delivery timeline</p>
+              <p className="mt-0.5 text-sm font-semibold text-slate-100">
+                Week {week.current}
+                <span className="font-normal text-muted"> of {week.total}</span>
+              </p>
+            </div>
+          ) : null
         }
       />
 
@@ -88,13 +99,10 @@ export function DashboardView() {
           <Card>
             <CardHeader
               eyebrow="Phase 1"
-              title="Live delivery milestones"
-              action={
-                <span className="font-mono text-xs font-semibold tabular-nums text-slate-400">
-                  {overall}% complete
-                </span>
-              }
+              title="Delivery milestones"
+              action={<LiveBadge live={live} />}
             />
+
             {loading ? (
               <div className="px-5 py-5">
                 <SkeletonRows rows={4} />
@@ -108,7 +116,23 @@ export function DashboardView() {
                 description="Your delivery plan will appear here once the VybzTech team publishes it."
               />
             ) : (
-              <MilestoneList milestones={milestones} />
+              <>
+                <div className="border-b border-hairline">
+                  <PhaseTimeline milestones={milestones} />
+                  <div className="flex items-center gap-3 px-5 pb-4">
+                    <ProgressBar
+                      value={overall}
+                      fill="bg-emerald_brand-500"
+                      label="Overall Phase 1 progress"
+                      className="flex-1"
+                    />
+                    <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-slate-300">
+                      {overall}%
+                    </span>
+                  </div>
+                </div>
+                <MilestoneList milestones={milestones} />
+              </>
             )}
           </Card>
         </div>

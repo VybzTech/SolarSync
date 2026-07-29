@@ -7,6 +7,8 @@ interface QueryState<T> {
   loading: boolean
   error: string | null
   refresh: () => void
+  /** True once the realtime channel is subscribed and pushing changes. */
+  live: boolean
 }
 
 type QueryBuilder<T> = () => PromiseLike<{
@@ -32,6 +34,7 @@ export function useSupabaseQuery<T>(
   const [data, setData] = useState<T[]>([])
   const [loading, setLoading] = useState(enabled)
   const [error, setError] = useState<string | null>(null)
+  const [live, setLive] = useState(false)
   const [nonce, setNonce] = useState(0)
 
   const mounted = useRef(true)
@@ -77,7 +80,10 @@ export function useSupabaseQuery<T>(
   // Realtime: any write to the table re-runs the query. Volumes here are tiny
   // (tens of rows), so a refetch is simpler and safer than patching in place.
   useEffect(() => {
-    if (!enabled || !realtimeTable) return
+    if (!enabled || !realtimeTable) {
+      setLive(false)
+      return
+    }
 
     const channel = supabase
       .channel(`solarsync:${realtimeTable}`)
@@ -86,12 +92,16 @@ export function useSupabaseQuery<T>(
         { event: '*', schema: 'public', table: realtimeTable },
         () => refresh(),
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (!mounted.current) return
+        setLive(status === 'SUBSCRIBED')
+      })
 
     return () => {
+      setLive(false)
       void supabase.removeChannel(channel)
     }
   }, [enabled, realtimeTable, refresh])
 
-  return { data, loading, error, refresh }
+  return { data, loading, error, refresh, live }
 }

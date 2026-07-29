@@ -195,13 +195,19 @@ Without this, a hard refresh on `/requests` returns 404 because Netlify looks fo
 
 ### 5. Post-deploy
 
-Set the Edge Function CORS allow-list to your live origin:
+Set the Edge Function CORS allow-list to your live origins:
 
 ```bash
 supabase secrets set PORTAL_ALLOWED_ORIGINS="https://portal.vybztech.com,https://solarsync.netlify.app"
 ```
 
+`localhost` and `127.0.0.1` are always permitted regardless of this list, so setting it does not break `npm run dev`. Any other origin gets an explicit `403` with a readable reason rather than a silent CORS failure.
+
 Then in **Supabase → Authentication → URL Configuration**, add your Netlify URL and custom domain to **Redirect URLs**, or magic links will bounce.
+
+### 6. Branded emails
+
+Supabase's default auth emails are unbranded and send from `noreply@mail.app.supabase.io`. FoliVision-branded replacements are in [`supabase/email-templates/`](supabase/email-templates/) — see the README there for which template to paste where, and why a first-time sign-in sends the *Confirm signup* template rather than the *Magic Link* one.
 
 ---
 

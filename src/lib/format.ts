@@ -91,6 +91,26 @@ export function formatBillingPeriod(value: string | null | undefined): string {
   }).format(date)
 }
 
+/**
+ * Which week of the engagement we are in, and how many there are in total.
+ * Returns null when either boundary is unknown, so callers can hide the
+ * indicator rather than render a misleading "Week 1 of 1".
+ */
+export function engagementWeek(
+  startValue: string | null | undefined,
+  endValue: string | null | undefined,
+): { current: number; total: number } | null {
+  const start = toDate(startValue)
+  const end = toDate(endValue)
+  if (!start || !end || end <= start) return null
+
+  const WEEK_MS = 604_800_000
+  const total = Math.max(1, Math.ceil((end.getTime() - start.getTime()) / WEEK_MS))
+  const elapsed = Math.floor((Date.now() - start.getTime()) / WEEK_MS) + 1
+
+  return { current: Math.min(Math.max(elapsed, 1), total), total }
+}
+
 export function initialsOf(name: string | null | undefined): string {
   if (!name) return '—'
   const parts = name.trim().split(/\s+/).slice(0, 2)

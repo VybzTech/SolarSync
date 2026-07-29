@@ -69,13 +69,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // Both headers are sent deliberately. The function runs with
+          // verify_jwt disabled, but the Supabase API gateway in front of it
+          // rejects unauthenticated requests that carry neither header.
           apikey: env.supabaseAnonKey,
+          Authorization: `Bearer ${env.supabaseAnonKey}`,
         },
         body: JSON.stringify({ code: code.trim(), pin: pin.trim() }),
       })
-    } catch {
+    } catch (networkError) {
+      // A CORS rejection surfaces here as an opaque TypeError, so log the
+      // detail — otherwise this failure mode is undiagnosable from the UI.
+      console.error('[SolarSync] pin-login request failed:', networkError)
       throw new AuthError(
-        'Could not reach the authentication service. Check your connection and try again.',
+        'Could not reach the sign-in service. If you are running locally, ' +
+          'check the browser console for a CORS error.',
       )
     }
 
@@ -87,11 +95,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       payload = await response.json()
     } catch {
-      throw new AuthError('Unexpected response from the authentication service.')
+      throw new AuthError(
+        `Unexpected response from the sign-in service (HTTP ${response.status}).`,
+      )
     }
 
     if (!response.ok || !payload.tokenHash || !payload.email) {
-      throw new AuthError(payload.error ?? 'Sign-in failed. Please try again.')
+      console.error('[SolarSync] pin-login rejected:', response.status, payload)
+      throw new AuthError(
+        payload.error ?? `Sign-in failed (HTTP ${response.status}).`,
+      )
     }
 
     const { error } = await supabase.auth.verifyOtp({

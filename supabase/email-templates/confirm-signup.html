@@ -1,0 +1,119 @@
+<!--
+  SolarSync :: Confirm signup email
+  Paste into Supabase → Authentication → Emails → Confirm signup
+
+  Only reached when "Confirm email" is enabled. For a magic-link-only portal
+  you can disable that setting, in which case first-time users receive the
+  Magic Link template instead and never see this one.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F1F5F9;margin:0;padding:32px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background-color:#FFFFFF;border-radius:14px;overflow:hidden;border:1px solid #E2E8F0;">
+
+        <tr>
+          <td style="background-color:#006837;padding:22px 28px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="vertical-align:middle;padding-right:12px;">
+                  <div style="width:34px;height:34px;background-color:#FFFFFF;border-radius:9px;text-align:center;line-height:34px;font-size:19px;color:#FBB040;font-weight:700;">&#9728;</div>
+                </td>
+                <td style="vertical-align:middle;">
+                  <div style="color:#FFFFFF;font-size:16px;font-weight:600;letter-spacing:-0.2px;">SolarSync</div>
+                  <div style="color:#9DD5B6;font-size:11px;letter-spacing:1.3px;text-transform:uppercase;padding-top:2px;">FoliVision client portal</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="height:3px;background-color:#FBB040;font-size:0;line-height:0;">&nbsp;</td>
+        </tr>
+
+        <tr>
+          <td style="padding:34px 28px 8px;">
+            <h1 style="margin:0 0 12px;font-size:21px;line-height:1.35;color:#0F172A;font-weight:600;">Welcome to SolarSync</h1>
+            <p style="margin:0 0 8px;font-size:15px;line-height:1.65;color:#475569;">
+              VybzTech has given you access to the FoliVision delivery portal. Confirm your address to finish setting up.
+            </p>
+            <p style="margin:0 0 24px;font-size:15px;line-height:1.65;color:#475569;">
+              Inside you can track live milestone progress, reach the staging environments, raise SLA change requests and download project documents.
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" style="padding:0 28px 26px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="background-color:#006837;border-radius:9px;">
+                  <a href="{{ .ConfirmationURL }}"
+                     style="display:inline-block;padding:14px 34px;font-size:15px;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:9px;">
+                    Confirm and enter the portal
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:0 28px 24px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding:0 0 11px;font-size:14px;color:#475569;line-height:1.5;">
+                  <span style="color:#006837;font-weight:700;">&#9679;</span>&nbsp;&nbsp;Live Phase 1 milestone tracking
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 0 11px;font-size:14px;color:#475569;line-height:1.5;">
+                  <span style="color:#006837;font-weight:700;">&#9679;</span>&nbsp;&nbsp;Staging environments and the interactive prototype
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 0 11px;font-size:14px;color:#475569;line-height:1.5;">
+                  <span style="color:#006837;font-weight:700;">&#9679;</span>&nbsp;&nbsp;SLA-aligned change requests, 50 per month
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:14px;color:#475569;line-height:1.5;">
+                  <span style="color:#006837;font-weight:700;">&#9679;</span>&nbsp;&nbsp;Contracts, invoices and brand assets
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:0 28px 26px;">
+            <div style="border-top:1px solid #E2E8F0;padding-top:18px;">
+              <p style="margin:0 0 7px;font-size:12px;color:#64748B;">
+                Button not working? Paste this into your browser:
+              </p>
+              <p style="margin:0;font-size:12px;line-height:1.55;word-break:break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color:#006837;text-decoration:underline;">{{ .ConfirmationURL }}</a>
+              </p>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="background-color:#F8FAFC;border-top:1px solid #E2E8F0;padding:20px 28px;text-align:center;">
+            <p style="margin:0 0 4px;font-size:12px;color:#475569;font-weight:600;">
+              FoliVision Inverters Limited
+            </p>
+            <p style="margin:0 0 10px;font-size:11px;color:#94A3B8;">
+              FIA &mdash; Phase 1: Website Dashboard MVP
+            </p>
+            <p style="margin:0;font-size:11px;color:#94A3B8;">
+              Delivered by <span style="color:#006837;font-weight:600;">VybzTech Inc.</span><br />
+              This is a confidential client portal. Access is logged.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
