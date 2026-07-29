@@ -133,6 +133,32 @@ export interface StagingEnvironment {
   sort_order: number
 }
 
+export type StageStatus = 'Complete' | 'Active' | 'Upcoming'
+
+export interface SdlcStage {
+  id: string
+  client_id: string
+  name: string
+  summary: string | null
+  activities: string[]
+  exit_criteria: string | null
+  status: StageStatus
+  duration: string | null
+  sort_order: number
+}
+
+export interface Deliverable {
+  id: string
+  client_id: string
+  milestone_id: string | null
+  name: string
+  justification: string | null
+  cost: number | null
+  currency: string
+  status: MilestoneStatus
+  sort_order: number
+}
+
 /** Payload accepted by the change request form. */
 export interface NewChangeRequest {
   title: string

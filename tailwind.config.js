@@ -1,85 +1,118 @@
 /** @type {import('tailwindcss').Config} */
+
+/* Semantic colours resolve through CSS variables so a single `.dark` class
+   on <html> flips the entire palette. The <alpha-value> placeholder keeps
+   Tailwind's opacity modifiers (bg-card/60) working. */
+const surface = (name) => `rgb(var(--${name}) / <alpha-value>)`
+
 export default {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        // ---- Surfaces (dark-first B2B palette anchored on #0F172A) ----
-        canvas: {
-          DEFAULT: '#0F172A',
-          deep: '#0A1120',
-          raised: '#141F38',
-          overlay: '#1B2942',
+        page: surface('page'),
+        card: surface('card'),
+        raised: surface('raised'),
+        sunken: surface('sunken'),
+
+        ink: {
+          DEFAULT: surface('ink'),
+          2: surface('ink-2'),
+          3: surface('ink-3'),
         },
-        hairline: {
-          DEFAULT: 'rgba(148, 163, 184, 0.14)',
-          strong: 'rgba(148, 163, 184, 0.26)',
+
+        line: {
+          DEFAULT: surface('line'),
+          2: surface('line-2'),
         },
+
         // ---- FoliVision Emerald Green ----
-        emerald_brand: {
+        brand: {
           50: '#E8F5EE',
           100: '#C5E6D3',
           200: '#9DD5B6',
           300: '#6FC395',
-          400: '#40AF74',
+          400: '#2F9E68',
           500: '#0F8A4C',
           600: '#006837',
           700: '#005A2F',
           800: '#004826',
           900: '#00331B',
         },
+
         // ---- FoliVision Solar Orange ----
         solar: {
           50: '#FFF7E8',
           100: '#FEEAC4',
           200: '#FDDB9B',
           300: '#FCCB70',
-          400: '#FBBE50',
-          500: '#FBB040',
-          600: '#E09528',
-          700: '#B8741A',
-          800: '#8A5511',
-          900: '#5C3809',
+          400: '#E8A22B',
+          500: '#C8830F',
+          600: '#A66B08',
+          700: '#835305',
+          800: '#5C3903',
+          900: '#3D2502',
         },
-        // ---- Accessible muted text ----
-        // Tailwind's slate-500/600 fail WCAG AA on our dark surfaces
-        // (3.44:1 and 2.16:1). These are solved to clear 4.5:1 on the
-        // lightest surface the portal uses (#141F38).
-        muted: {
-          DEFAULT: '#7E899A', // 4.62:1 on canvas-raised
-          soft: '#8E99AC',    // 5.69:1 on canvas-raised
+
+        info: {
+          300: '#7DA2FF',
+          500: '#3A63D0',
+          600: '#2B4CAA',
         },
-        // ---- VybzTech accent (portal chrome / provider identity) ----
-        vybz: {
-          400: '#7DA2FF',
-          500: '#4E7DF5',
-          600: '#3A63D0',
+
+        /* Theme-aware STATUS TEXT.
+           Brand fills stay constant across themes, but text drawn in a brand
+           colour cannot: #FBB040 on white is 1.8:1. These flip with the
+           theme so every status label clears AA in both modes. */
+        fg: {
+          brand: surface('fg-brand'),
+          warn: surface('fg-warn'),
+          info: surface('fg-info'),
+          danger: surface('fg-danger'),
+          neutral: surface('ink-3'),
+        },
+        tint: {
+          brand: surface('tint-brand'),
+          warn: surface('tint-warn'),
+          info: surface('tint-info'),
+          danger: surface('tint-danger'),
+          neutral: surface('tint-neutral'),
         },
       },
+
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        sans: ['Inter var', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
+
       fontSize: {
-        '2xs': ['0.6875rem', { lineHeight: '1rem', letterSpacing: '0.04em' }],
+        '2xs': ['0.6875rem', { lineHeight: '1rem', letterSpacing: '0.03em' }],
       },
+
       boxShadow: {
-        card: '0 1px 2px rgba(0,0,0,0.28), 0 8px 24px -12px rgba(0,0,0,0.55)',
-        lift: '0 4px 12px rgba(0,0,0,0.32), 0 18px 44px -20px rgba(0,0,0,0.65)',
-        'glow-emerald': '0 0 0 1px rgba(0,104,55,0.4), 0 8px 28px -10px rgba(0,104,55,0.55)',
+        // Soft layered depth. Values come from CSS vars so each theme gets
+        // its own shadow weight -- dark surfaces need denser shadows.
+        card: 'var(--shadow-card)',
+        lift: 'var(--shadow-lift)',
+        pop: 'var(--shadow-pop)',
+        inset: 'var(--shadow-inset)',
       },
+
+      borderRadius: {
+        xl: '0.75rem',
+        '2xl': '1rem',
+      },
+
       keyframes: {
         'fade-up': {
           from: { opacity: '0', transform: 'translateY(6px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
-        shimmer: {
-          '100%': { transform: 'translateX(100%)' },
-        },
+        shimmer: { '100%': { transform: 'translateX(100%)' } },
         'pulse-dot': {
           '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.35' },
+          '50%': { opacity: '0.3' },
         },
       },
       animation: {

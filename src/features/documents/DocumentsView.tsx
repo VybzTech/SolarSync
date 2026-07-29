@@ -11,7 +11,7 @@ import type { ResourceItem } from '@/types/domain'
 
 const UNCATEGORISED = 'Other documents'
 
-export function VaultView() {
+export function DocumentsView() {
   const { data: resources, loading, error, refresh } = useResources()
 
   const grouped = useMemo(() => {
@@ -29,7 +29,7 @@ export function VaultView() {
     <>
       <PageHeader
         eyebrow="Documents"
-        title="Resource vault"
+        title="Documents"
         description="Executed contracts, requirement documents, invoices and brand assets for this engagement."
       />
 
@@ -58,12 +58,12 @@ export function VaultView() {
               <div className="mb-3.5 flex items-center gap-3">
                 <h2
                   id={`vault-${category}`}
-                  className="text-2xs font-semibold uppercase tracking-[0.14em] text-slate-400"
+                  className="text-2xs font-semibold uppercase tracking-[0.14em] text-ink-2"
                 >
                   {category}
                 </h2>
-                <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
-                <span className="text-2xs text-muted">
+                <span className="h-px flex-1 bg-line" aria-hidden="true" />
+                <span className="text-2xs text-ink-3">
                   {items.length} item{items.length === 1 ? '' : 's'}
                 </span>
               </div>

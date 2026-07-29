@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ToastProvider } from '@/components/ui/Toast'
+import { ThemeProvider } from '@/providers/ThemeProvider'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { TenantProvider } from '@/providers/TenantProvider'
 import './index.css'
@@ -15,16 +16,18 @@ if (!container) {
 
 createRoot(container).render(
   <StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AuthProvider>
-          <TenantProvider>
-            <ToastProvider>
-              <App />
-            </ToastProvider>
-          </TenantProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+    <ThemeProvider>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AuthProvider>
+            <TenantProvider>
+              <ToastProvider>
+                <App />
+              </ToastProvider>
+            </TenantProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </ThemeProvider>
   </StrictMode>,
 )

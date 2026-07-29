@@ -32,13 +32,13 @@ export class ErrorBoundary extends Component<Props, State> {
     return (
       <div className="flex min-h-full items-center justify-center px-4 py-12">
         <div className="surface w-full max-w-md p-8 text-center">
-          <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-rose-500/10 text-rose-400">
+          <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-tint-danger text-fg-danger">
             <AlertOctagon className="h-5 w-5" aria-hidden="true" />
           </div>
-          <h1 className="text-base font-semibold text-slate-100">
+          <h1 className="text-base font-semibold text-ink">
             Something went wrong
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-400">
+          <p className="mt-2 text-sm leading-relaxed text-ink-2">
             The portal hit an unexpected error. Reloading usually resolves it. If it
             persists, contact your VybzTech project lead.
           </p>

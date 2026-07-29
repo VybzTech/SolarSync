@@ -3,9 +3,10 @@ import type { InputHTMLAttributes, TextareaHTMLAttributes } from 'react'
 import { cn } from '@/lib/cn'
 
 const CONTROL_BASE =
-  'w-full rounded-lg bg-canvas-deep px-3.5 py-2.5 text-sm text-slate-100 ' +
-  'ring-1 ring-inset ring-hairline-strong placeholder:text-muted ' +
-  'transition focus:ring-2 focus:ring-solar-500 disabled:opacity-60'
+  'w-full rounded-lg border border-line bg-card px-3.5 py-2.5 text-sm text-ink ' +
+  'shadow-inset placeholder:text-ink-3/70 transition ' +
+  'hover:border-line-2 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/25 ' +
+  'focus:outline-none disabled:opacity-60'
 
 interface FieldWrapperProps {
   label: string
@@ -16,30 +17,23 @@ interface FieldWrapperProps {
   children: ReactNode
 }
 
-function FieldWrapper({
-  label,
-  htmlFor,
-  hint,
-  error,
-  required,
-  children,
-}: FieldWrapperProps) {
+function FieldWrapper({ label, htmlFor, hint, error, required, children }: FieldWrapperProps) {
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <label htmlFor={htmlFor} className="text-sm font-medium text-slate-300">
+        <label htmlFor={htmlFor} className="text-sm font-medium text-ink">
           {label}
           {required ? (
-            <span className="ml-1 text-solar-500" aria-hidden="true">
+            <span className="ml-1 text-fg-warn" aria-hidden="true">
               *
             </span>
           ) : null}
         </label>
-        {hint ? <span className="text-2xs text-slate-400">{hint}</span> : null}
+        {hint ? <span className="text-2xs text-ink-3">{hint}</span> : null}
       </div>
       {children}
       {error ? (
-        <p id={`${htmlFor}-error`} className="mt-1.5 text-xs text-rose-400" role="alert">
+        <p id={`${htmlFor}-error`} className="mt-1.5 text-xs text-fg-danger" role="alert">
           {error}
         </p>
       ) : null}
@@ -57,19 +51,13 @@ export function TextField({ label, hint, error, className, ...rest }: TextFieldP
   const generatedId = useId()
   const id = rest.id ?? generatedId
   return (
-    <FieldWrapper
-      label={label}
-      htmlFor={id}
-      hint={hint}
-      error={error}
-      required={rest.required}
-    >
+    <FieldWrapper label={label} htmlFor={id} hint={hint} error={error} required={rest.required}>
       <input
         {...rest}
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={cn(CONTROL_BASE, error && 'ring-rose-500/60', className)}
+        className={cn(CONTROL_BASE, error && 'border-fg-danger/60', className)}
       />
     </FieldWrapper>
   )
@@ -81,29 +69,17 @@ interface TextAreaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement>
   error?: string | null
 }
 
-export function TextAreaField({
-  label,
-  hint,
-  error,
-  className,
-  ...rest
-}: TextAreaFieldProps) {
+export function TextAreaField({ label, hint, error, className, ...rest }: TextAreaFieldProps) {
   const generatedId = useId()
   const id = rest.id ?? generatedId
   return (
-    <FieldWrapper
-      label={label}
-      htmlFor={id}
-      hint={hint}
-      error={error}
-      required={rest.required}
-    >
+    <FieldWrapper label={label} htmlFor={id} hint={hint} error={error} required={rest.required}>
       <textarea
         {...rest}
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={cn(CONTROL_BASE, 'resize-y', error && 'ring-rose-500/60', className)}
+        className={cn(CONTROL_BASE, 'resize-y', error && 'border-fg-danger/60', className)}
       />
     </FieldWrapper>
   )
@@ -127,31 +103,34 @@ export function SelectField({
   const generatedId = useId()
   const id = rest.id ?? generatedId
   return (
-    <FieldWrapper
-      label={label}
-      htmlFor={id}
-      hint={hint}
-      error={error}
-      required={rest.required}
-    >
+    <FieldWrapper label={label} htmlFor={id} hint={hint} error={error} required={rest.required}>
       <select
         {...rest}
         id={id}
         aria-invalid={error ? true : undefined}
-        className={cn(CONTROL_BASE, 'appearance-none pr-9', className)}
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'right 0.75rem center',
-        }}
+        className={cn(CONTROL_BASE, 'appearance-none bg-none pr-9', className)}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value} className="bg-canvas-deep">
+          <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
+      {/* Chevron drawn separately so it inherits the theme text colour
+          instead of being baked into a background-image data URI. */}
+      <span className="pointer-events-none relative block">
+        <svg
+          className="absolute -top-[2.15rem] right-3 h-4 w-4 text-ink-3"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </span>
     </FieldWrapper>
   )
 }

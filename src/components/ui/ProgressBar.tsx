@@ -2,7 +2,7 @@ import { cn } from '@/lib/cn'
 
 interface ProgressBarProps {
   value: number
-  /** Complete Tailwind background class, e.g. "bg-solar-500". */
+  /** Complete Tailwind background class, e.g. "bg-solar-400". */
   fill: string
   label?: string
   className?: string
@@ -13,7 +13,10 @@ export function ProgressBar({ value, fill, label, className }: ProgressBarProps)
 
   return (
     <div
-      className={cn('h-2 w-full overflow-hidden rounded-full bg-white/[0.06]', className)}
+      className={cn(
+        'h-2 w-full overflow-hidden rounded-full bg-sunken shadow-inset',
+        className,
+      )}
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}

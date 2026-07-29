@@ -137,7 +137,7 @@ export function RequestForm({ onSubmitted }: { onSubmitted?: () => void }) {
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <p className="text-2xs text-muted">
+          <p className="text-2xs text-ink-3">
             Counts toward your monthly SLA allowance.
           </p>
           <Button

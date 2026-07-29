@@ -1,4 +1,5 @@
 import { FileSignature, GaugeCircle, Receipt, TrendingUp, Layers } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { SkeletonRows } from '@/components/ui/Skeleton'
@@ -7,9 +8,9 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { LiveBadge } from '@/components/ui/LiveBadge'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { CountdownCard } from './CountdownCard'
-import { MilestoneList } from './MilestoneList'
 import { PhaseTimeline } from './PhaseTimeline'
 import { StatWidget } from './StatWidgets'
+import { StagingStrip } from '@/features/staging/StagingStrip'
 import { useMilestones, useSlaMetrics } from '@/hooks/usePortalData'
 import { useTenant } from '@/providers/TenantProvider'
 import { engagementWeek, formatCurrency, formatDate } from '@/lib/format'
@@ -38,29 +39,28 @@ export function DashboardView() {
     <>
       <PageHeader
         eyebrow="Overview"
-        title={client ? `${client.name} delivery dashboard` : 'Delivery dashboard'}
+        title={client ? `${client.name} delivery portal` : 'Delivery portal'}
         description={client?.engagement_title ?? undefined}
         action={
           week ? (
-            <div className="rounded-lg border border-hairline bg-canvas-raised px-4 py-2.5 text-right">
+            <div className="rounded-xl border border-line bg-raised px-4 py-2.5 text-right shadow-inset">
               <p className="eyebrow">Delivery timeline</p>
-              <p className="mt-0.5 text-sm font-semibold text-slate-100">
+              <p className="mt-0.5 text-sm font-semibold text-ink">
                 Week {week.current}
-                <span className="font-normal text-muted"> of {week.total}</span>
+                <span className="font-normal text-ink-3"> of {week.total}</span>
               </p>
             </div>
           ) : null
         }
       />
 
-      {/* Quick status */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatWidget
           icon={<TrendingUp className="h-4 w-4" />}
           label="Overall progress"
           value={`${overall}%`}
           detail={`${completed} of ${milestones.length} milestones complete`}
-          accent="emerald"
+          accent="brand"
         />
         <StatWidget
           icon={<GaugeCircle className="h-4 w-4" />}
@@ -71,7 +71,7 @@ export function DashboardView() {
               ? `${Math.max(sla.requests_limit - sla.requests_used, 0)} remaining this month`
               : 'No allocation recorded'
           }
-          accent="solar"
+          accent="warn"
         />
         <StatWidget
           icon={<FileSignature className="h-4 w-4" />}
@@ -82,7 +82,7 @@ export function DashboardView() {
               ? `Engagement began ${formatDate(client.engagement_start)}`
               : undefined
           }
-          accent="vybz"
+          accent="info"
         />
         <StatWidget
           icon={<Receipt className="h-4 w-4" />}
@@ -94,18 +94,16 @@ export function DashboardView() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-3">
-        {/* Milestones */}
-        <div className="xl:col-span-2">
+        <div className="space-y-6 xl:col-span-2">
           <Card>
             <CardHeader
-              eyebrow="Phase 1"
-              title="Delivery milestones"
+              eyebrow="Phase 1 roadmap"
+              title="Where the build stands"
               action={<LiveBadge live={live} />}
             />
-
             {loading ? (
               <div className="px-5 py-5">
-                <SkeletonRows rows={4} />
+                <SkeletonRows rows={3} />
               </div>
             ) : error ? (
               <ErrorState message={error} onRetry={refresh} />
@@ -117,60 +115,50 @@ export function DashboardView() {
               />
             ) : (
               <>
-                <div className="border-b border-hairline">
-                  <PhaseTimeline milestones={milestones} />
-                  <div className="flex items-center gap-3 px-5 pb-4">
-                    <ProgressBar
-                      value={overall}
-                      fill="bg-emerald_brand-500"
-                      label="Overall Phase 1 progress"
-                      className="flex-1"
-                    />
-                    <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-slate-300">
-                      {overall}%
-                    </span>
-                  </div>
+                <PhaseTimeline milestones={milestones} />
+                <div className="flex items-center gap-3 border-t border-line px-5 py-4">
+                  <ProgressBar
+                    value={overall}
+                    fill="bg-brand-500"
+                    label="Overall Phase 1 progress"
+                    className="flex-1"
+                  />
+                  <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-ink-2">
+                    {overall}%
+                  </span>
+                  <Link
+                    to="/milestones"
+                    className="shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-fg-brand transition hover:bg-tint-brand"
+                  >
+                    View detail
+                  </Link>
                 </div>
-                <MilestoneList milestones={milestones} />
               </>
             )}
           </Card>
+
+          <StagingStrip />
         </div>
 
-        {/* Countdown + commercial detail */}
         <div className="space-y-6">
-          <CountdownCard
-            targetIso={client?.uat_review_at}
-            label="UAT / Staging Review"
-          />
+          <CountdownCard targetIso={client?.uat_review_at} label="UAT / Staging Review" />
 
           <Card>
             <CardHeader eyebrow="Commercial" title="Engagement summary" />
-            <dl className="divide-y divide-hairline">
+            <dl className="divide-y divide-line">
               {[
                 { term: 'Client', detail: client?.legal_name ?? client?.name ?? '—' },
                 { term: 'Contract', detail: client?.contract_status ?? '—' },
                 { term: 'Invoicing', detail: client?.invoice_status ?? '—' },
                 {
                   term: 'Phase value',
-                  detail: formatCurrency(
-                    client?.contract_value,
-                    client?.currency ?? 'NGN',
-                  ),
+                  detail: formatCurrency(client?.contract_value, client?.currency ?? 'NGN'),
                 },
-                {
-                  term: 'Service provider',
-                  detail: 'VybzTech Inc.',
-                },
+                { term: 'Service provider', detail: 'VybzTech Inc.' },
               ].map((row) => (
-                <div
-                  key={row.term}
-                  className="flex items-start justify-between gap-4 px-5 py-3"
-                >
-                  <dt className="text-xs text-slate-400">{row.term}</dt>
-                  <dd className="text-right text-xs font-medium text-slate-300">
-                    {row.detail}
-                  </dd>
+                <div key={row.term} className="flex items-start justify-between gap-4 px-5 py-3">
+                  <dt className="text-xs text-ink-3">{row.term}</dt>
+                  <dd className="text-right text-xs font-medium text-ink">{row.detail}</dd>
                 </div>
               ))}
             </dl>

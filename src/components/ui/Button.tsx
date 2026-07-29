@@ -14,16 +14,24 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANTS: Record<Variant, string> = {
+  // Tactile depth: a lit inner top edge plus a soft drop shadow, pressed
+  // flat on :active.
   primary:
-    'bg-emerald_brand-600 text-white hover:bg-emerald_brand-500 active:bg-emerald_brand-700 disabled:bg-emerald_brand-800',
+    'bg-brand-600 text-white shadow-card ring-1 ring-inset ring-white/15 ' +
+    'hover:bg-brand-500 hover:shadow-lift active:translate-y-px active:shadow-none ' +
+    'disabled:bg-brand-800',
   secondary:
-    'bg-canvas-overlay text-slate-200 ring-1 ring-inset ring-hairline-strong hover:bg-canvas-overlay/70 hover:text-white',
-  ghost: 'text-slate-400 hover:bg-white/5 hover:text-slate-100',
-  danger: 'bg-rose-600 text-white hover:bg-rose-500 active:bg-rose-700',
+    'bg-card text-ink border border-line shadow-card ' +
+    'hover:bg-raised hover:border-line-2 hover:shadow-lift ' +
+    'active:translate-y-px active:shadow-none',
+  ghost: 'text-ink-2 hover:bg-raised hover:text-ink',
+  danger:
+    'bg-fg-danger text-white shadow-card ring-1 ring-inset ring-white/15 ' +
+    'hover:brightness-110 hover:shadow-lift active:translate-y-px active:shadow-none',
 }
 
 const SIZES: Record<Size, string> = {
-  // 40px / 44px tall — both clear the 40px minimum touch target.
+  // 40px / 44px tall - both clear the 40px minimum touch target.
   sm: 'h-10 px-3.5 text-sm gap-1.5',
   md: 'h-11 px-5 text-sm gap-2',
 }
@@ -45,8 +53,8 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex items-center justify-center rounded-lg font-semibold transition',
-        'disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-150',
+        'disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
         VARIANTS[variant],
         SIZES[size],
         className,

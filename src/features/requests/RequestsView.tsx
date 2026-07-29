@@ -70,8 +70,8 @@ export function RequestsView() {
                         className={cn(
                           'rounded-full px-2.5 py-1 text-2xs font-semibold transition',
                           filter === option
-                            ? 'bg-emerald_brand-600 text-white'
-                            : 'bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] hover:text-slate-200',
+                            ? 'bg-brand-600 text-white'
+                            : 'bg-raised text-ink-2 hover:bg-line hover:text-ink',
                         )}
                       >
                         {option}
@@ -118,10 +118,10 @@ export function RequestsView() {
             <CardHeader eyebrow="Reference" title="What counts as a request" />
             <div className="space-y-4 px-5 py-4 text-sm">
               <div>
-                <p className="mb-1.5 text-xs font-semibold text-emerald_brand-300">
+                <p className="mb-1.5 text-xs font-semibold text-fg-brand">
                   Included in your allowance
                 </p>
-                <ul className="space-y-1 text-xs leading-relaxed text-slate-400">
+                <ul className="space-y-1 text-xs leading-relaxed text-ink-2">
                   <li>UI changes, layout and visual refinements</li>
                   <li>Alert rules and threshold adjustments</li>
                   <li>Tariff rates and savings formula updates</li>
@@ -129,18 +129,18 @@ export function RequestsView() {
                   <li>New inverter brands using existing logger APIs</li>
                 </ul>
               </div>
-              <div className="border-t border-hairline pt-3.5">
-                <p className="mb-1.5 text-xs font-semibold text-solar-300">
+              <div className="border-t border-line pt-3.5">
+                <p className="mb-1.5 text-xs font-semibold text-fg-warn">
                   Quoted separately
                 </p>
-                <ul className="space-y-1 text-xs leading-relaxed text-slate-400">
+                <ul className="space-y-1 text-xs leading-relaxed text-ink-2">
                   <li>Major schema migrations or re-architecture</li>
                   <li>Disaster recovery redesign</li>
                   <li>Microservices migration or sharding</li>
                   <li>Multi-language localisation</li>
                 </ul>
               </div>
-              <p className="border-t border-hairline pt-3.5 text-2xs leading-relaxed text-muted">
+              <p className="border-t border-line pt-3.5 text-2xs leading-relaxed text-ink-3">
                 Maintenance window: Sundays 12:00 AM – 4:00 AM WAT, excluded from SLA
                 obligations. Critical bugs are always prioritised above feature work.
               </p>

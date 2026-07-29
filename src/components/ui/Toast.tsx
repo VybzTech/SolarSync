@@ -51,10 +51,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={toast.id}
             className={cn(
-              'pointer-events-auto flex w-full max-w-sm animate-fade-up items-start gap-3 rounded-lg border px-4 py-3 shadow-lift backdrop-blur',
+              'pointer-events-auto flex w-full max-w-sm animate-fade-up items-start gap-3 rounded-xl border px-4 py-3 shadow-pop',
               toast.variant === 'success'
-                ? 'border-emerald_brand-500/30 bg-emerald_brand-900/80 text-emerald_brand-100'
-                : 'border-rose-500/30 bg-rose-950/85 text-rose-100',
+                ? 'border-fg-brand/25 bg-tint-brand text-fg-brand'
+                : 'border-fg-danger/25 bg-tint-danger text-fg-danger',
             )}
           >
             {toast.variant === 'success' ? (
@@ -62,7 +62,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             ) : (
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             )}
-            <p className="flex-1 text-sm">{toast.message}</p>
+            <p className="flex-1 text-sm font-medium">{toast.message}</p>
             <button
               type="button"
               onClick={() => dismiss(toast.id)}
@@ -80,8 +80,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext)
-  if (!context) {
-    throw new Error('useToast must be used within a <ToastProvider>.')
-  }
+  if (!context) throw new Error('useToast must be used within a <ToastProvider>.')
   return context
 }

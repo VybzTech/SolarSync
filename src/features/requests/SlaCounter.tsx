@@ -15,13 +15,13 @@ export function SlaCounter({ metrics }: { metrics: SlaMetrics | undefined }) {
   // Amber at 70% consumed, red once the cap is breached.
   const state =
     ratio >= 1
-      ? { fill: 'bg-rose-500', text: 'text-rose-300' }
+      ? { fill: 'bg-fg-danger', text: 'text-fg-danger' }
       : ratio >= 0.7
-        ? { fill: 'bg-solar-500', text: 'text-solar-300' }
-        : { fill: 'bg-emerald_brand-500', text: 'text-emerald_brand-300' }
+        ? { fill: 'bg-solar-400', text: 'text-fg-warn' }
+        : { fill: 'bg-brand-500', text: 'text-fg-brand' }
 
   return (
-    <Card className="relative overflow-hidden">
+    <Card className="relative overflow-hidden" sheen>
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -32,12 +32,12 @@ export function SlaCounter({ metrics }: { metrics: SlaMetrics | undefined }) {
       />
       <div className="relative px-5 py-5">
         <div className="mb-4 flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald_brand-500/15 text-emerald_brand-300">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/15 text-fg-brand">
             <Gauge className="h-4 w-4" aria-hidden="true" />
           </span>
           <div>
             <p className="eyebrow">Monthly SLA allowance</p>
-            <p className="text-sm font-semibold text-slate-100">
+            <p className="text-sm font-semibold text-ink">
               {formatBillingPeriod(metrics?.current_month)}
             </p>
           </div>
@@ -45,10 +45,10 @@ export function SlaCounter({ metrics }: { metrics: SlaMetrics | undefined }) {
 
         <p className="text-3xl font-bold tracking-tight text-white">
           <span className={cn('tabular-nums', state.text)}>{used}</span>
-          <span className="text-muted"> of </span>
+          <span className="text-ink-3"> of </span>
           <span className="tabular-nums">{limit}</span>
         </p>
-        <p className="mt-1 text-sm text-slate-400">SLA change requests used</p>
+        <p className="mt-1 text-sm text-ink-2">SLA change requests used</p>
 
         <ProgressBar
           value={ratio * 100}
@@ -58,24 +58,24 @@ export function SlaCounter({ metrics }: { metrics: SlaMetrics | undefined }) {
         />
 
         <div className="mt-3 flex items-center justify-between text-xs">
-          <span className="text-slate-400">
+          <span className="text-ink-2">
             {remaining} request{remaining === 1 ? '' : 's'} remaining
           </span>
-          <span className="text-muted">
+          <span className="text-ink-3">
             {Math.round(ratio * 100)}% consumed
           </span>
         </div>
 
         {overage > 0 ? (
           <div
-            className="mt-4 flex items-start gap-2.5 rounded-lg bg-rose-500/10 px-3.5 py-3 ring-1 ring-inset ring-rose-500/25"
+            className="mt-4 flex items-start gap-2.5 rounded-lg bg-tint-danger px-3.5 py-3 ring-1 ring-inset ring-fg-danger/20"
             role="status"
           >
             <AlertTriangle
-              className="mt-0.5 h-4 w-4 shrink-0 text-rose-400"
+              className="mt-0.5 h-4 w-4 shrink-0 text-fg-danger"
               aria-hidden="true"
             />
-            <p className="text-xs leading-relaxed text-rose-200">
+            <p className="text-xs leading-relaxed text-fg-danger">
               <span className="font-semibold">
                 {overage} request{overage === 1 ? '' : 's'} over the monthly cap.
               </span>{' '}
@@ -85,7 +85,7 @@ export function SlaCounter({ metrics }: { metrics: SlaMetrics | undefined }) {
             </p>
           </div>
         ) : ratio >= 0.7 ? (
-          <p className="mt-4 rounded-lg bg-solar-500/10 px-3.5 py-3 text-xs leading-relaxed text-solar-200 ring-1 ring-inset ring-solar-500/25">
+          <p className="mt-4 rounded-lg bg-tint-warn px-3.5 py-3 text-xs leading-relaxed text-fg-warn ring-1 ring-inset ring-fg-warn/20">
             You are approaching the monthly cap. Requests beyond {limit} are billed at{' '}
             {formatCurrency(metrics?.overage_rate ?? 10000, metrics?.currency ?? 'NGN')} each.
           </p>

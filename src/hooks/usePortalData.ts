@@ -4,6 +4,8 @@ import { useTenant } from '@/providers/TenantProvider'
 import { useSupabaseQuery } from './useSupabaseQuery'
 import type {
   ChangeRequest,
+  Deliverable,
+  SdlcStage,
   NewChangeRequest,
   ProjectMilestone,
   ResourceItem,
@@ -87,6 +89,26 @@ export function useStagingEnvironments() {
         .order('sort_order', { ascending: true }),
     [client?.id],
     { enabled: Boolean(client), realtimeTable: 'staging_environments' },
+  )
+}
+
+export function useSdlcStages() {
+  const { client } = useTenant()
+  return useSupabaseQuery<SdlcStage>(
+    () =>
+      supabase.from('sdlc_stages').select('*').order('sort_order', { ascending: true }),
+    [client?.id],
+    { enabled: Boolean(client), realtimeTable: 'sdlc_stages' },
+  )
+}
+
+export function useDeliverables() {
+  const { client } = useTenant()
+  return useSupabaseQuery<Deliverable>(
+    () =>
+      supabase.from('deliverables').select('*').order('sort_order', { ascending: true }),
+    [client?.id],
+    { enabled: Boolean(client), realtimeTable: 'deliverables' },
   )
 }
 

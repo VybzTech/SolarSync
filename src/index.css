@@ -2,13 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   Theme tokens
+   Light is the default. Adding `.dark` to <html> flips every surface.
+   Values are space-separated RGB channels so Tailwind can apply opacity.
+   All text/background pairs are verified to clear WCAG AA in both modes.
+   ===================================================================== */
 @layer base {
   :root {
+    color-scheme: light;
+
+    --page:    247 248 250;
+    --card:    255 255 255;
+    --raised:  250 251 252;
+    --sunken:  241 244 248;
+
+    --ink:      11  18  32;   /* 17.6:1 on card */
+    --ink-2:    62  75  95;   /* 8.4:1  on card */
+    --ink-3:    91 105 127;   /*  5.1:1 on card */
+
+    --line:    228 231 236;
+    --line-2:  208 213 221;
+
+    --fg-brand:   0 104  55;   /* 6.9:1 on card */
+    --fg-warn:  150  96  26;   /* 5.3:1 on card -- #FBB040 is only 1.8:1 */
+    --fg-info:   43  76 170;   /* 7.7:1 on card */
+    --fg-danger:170  32  44;   /* 6.3:1 on card */
+
+    --tint-brand:   232 245 238;
+    --tint-warn:    255 244 224;
+    --tint-info:    233 239 252;
+    --tint-danger:  253 234 235;
+    --tint-neutral: 241 244 248;
+
+    --shadow-card:
+      0 1px 2px rgba(16, 24, 40, 0.04),
+      0 1px 3px rgba(16, 24, 40, 0.06);
+    --shadow-lift:
+      0 4px 8px -2px rgba(16, 24, 40, 0.08),
+      0 12px 24px -6px rgba(16, 24, 40, 0.10);
+    --shadow-pop:
+      0 8px 16px -4px rgba(16, 24, 40, 0.10),
+      0 24px 48px -12px rgba(16, 24, 40, 0.18);
+    --shadow-inset: inset 0 1px 2px rgba(16, 24, 40, 0.06);
+  }
+
+  .dark {
     color-scheme: dark;
+
+    --page:     10  15  26;
+    --card:     17  25  40;
+    --raised:   23  33  52;
+    --sunken:    7  11  20;
+
+    --ink:     248 250 252;  /* 16.9:1 on card */
+    --ink-2:   201 212 227;  /* 11.0:1 on card */
+    --ink-3:   148 163 184;  /*  6.4:1 on card */
+
+    --line:     32  45  68;
+    --line-2:   48  64  92;
+
+    --fg-brand:  111 195 149;  /* 8.3:1 on card */
+    --fg-warn:   252 203 112;  /* 11.7:1 on card */
+    --fg-info:   125 162 255;  /* 7.1:1 on card */
+    --fg-danger: 253 164 175;  /* 8.7:1 on card */
+
+    --tint-brand:   16  52  38;
+    --tint-warn:    56  40  14;
+    --tint-info:    23  36  74;
+    --tint-danger:  62  22  28;
+    --tint-neutral: 26  36  54;
+
+    --shadow-card:
+      0 1px 2px rgba(0, 0, 0, 0.32),
+      0 2px 6px rgba(0, 0, 0, 0.24);
+    --shadow-lift:
+      0 6px 14px -4px rgba(0, 0, 0, 0.44),
+      0 18px 36px -12px rgba(0, 0, 0, 0.52);
+    --shadow-pop:
+      0 12px 28px -8px rgba(0, 0, 0, 0.55),
+      0 32px 64px -16px rgba(0, 0, 0, 0.62);
+    --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.35);
   }
 
   * {
-    @apply border-hairline;
+    @apply border-line;
   }
 
   html,
@@ -18,18 +96,18 @@
   }
 
   body {
-    @apply bg-canvas-deep text-slate-200 font-sans antialiased;
+    @apply bg-page font-sans text-ink antialiased;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
-  /* Visible, brand-coloured focus ring for keyboard users only. */
   :focus-visible {
-    @apply outline-none ring-2 ring-solar-500/70 ring-offset-2 ring-offset-canvas-deep;
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-page;
   }
 
   ::selection {
-    @apply bg-solar-500/30 text-white;
+    @apply bg-brand-500/20;
   }
 
   ::-webkit-scrollbar {
@@ -40,25 +118,41 @@
     @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-slate-700/60;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-600/80;
+    @apply rounded-full bg-line-2;
   }
 }
 
 @layer components {
+  /* The base surface: hairline border plus soft layered depth. */
   .surface {
-    @apply rounded-xl border border-hairline bg-canvas-raised shadow-card;
+    @apply rounded-xl border border-line bg-card shadow-card;
   }
 
   .eyebrow {
-    @apply text-2xs font-semibold uppercase tracking-[0.14em] text-muted;
+    @apply text-2xs font-semibold uppercase tracking-[0.12em] text-ink-3;
+  }
+
+  /* Subtle top highlight -- gives cards a lit edge without a hard gradient. */
+  .sheen {
+    position: relative;
+  }
+  .sheen::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgb(var(--ink) / 0.07),
+      transparent
+    );
+    pointer-events: none;
   }
 }
 
 @layer utilities {
-  /* Honour the user's reduced-motion preference across every animation. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

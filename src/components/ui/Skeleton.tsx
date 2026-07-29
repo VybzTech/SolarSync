@@ -4,9 +4,9 @@ export function Skeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-md bg-white/[0.05]',
+        'relative overflow-hidden rounded-md bg-sunken',
         'after:absolute after:inset-0 after:-translate-x-full after:animate-shimmer',
-        'after:bg-gradient-to-r after:from-transparent after:via-white/[0.07] after:to-transparent',
+        'after:bg-gradient-to-r after:from-transparent after:via-card/70 after:to-transparent',
         className,
       )}
       aria-hidden="true"
@@ -14,7 +14,6 @@ export function Skeleton({ className }: { className?: string }) {
   )
 }
 
-/** Placeholder used while a card's contents load. */
 export function SkeletonRows({ rows = 3 }: { rows?: number }) {
   return (
     <div className="space-y-4" role="status" aria-label="Loading">

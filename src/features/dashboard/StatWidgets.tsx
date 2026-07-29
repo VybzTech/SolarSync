@@ -6,14 +6,14 @@ interface StatWidgetProps {
   label: string
   value: string
   detail?: string
-  accent?: 'emerald' | 'solar' | 'vybz' | 'neutral'
+  accent?: 'brand' | 'warn' | 'info' | 'neutral'
 }
 
 const ACCENTS: Record<NonNullable<StatWidgetProps['accent']>, string> = {
-  emerald: 'bg-emerald_brand-500/12 text-emerald_brand-300',
-  solar: 'bg-solar-500/12 text-solar-400',
-  vybz: 'bg-vybz-500/12 text-vybz-400',
-  neutral: 'bg-white/[0.05] text-slate-400',
+  brand: 'bg-tint-brand text-fg-brand',
+  warn: 'bg-tint-warn text-fg-warn',
+  info: 'bg-tint-info text-fg-info',
+  neutral: 'bg-tint-neutral text-ink-3',
 }
 
 export function StatWidget({
@@ -24,11 +24,11 @@ export function StatWidget({
   accent = 'neutral',
 }: StatWidgetProps) {
   return (
-    <div className="surface px-4 py-4">
+    <div className="surface sheen px-4 py-4">
       <div className="flex items-start gap-3">
         <span
           className={cn(
-            'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
+            'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-inset',
             ACCENTS[accent],
           )}
           aria-hidden="true"
@@ -37,9 +37,11 @@ export function StatWidget({
         </span>
         <div className="min-w-0 flex-1">
           <p className="eyebrow">{label}</p>
-          <p className="mt-1 truncate text-base font-semibold text-slate-100">{value}</p>
+          <p className="mt-1 truncate text-lg font-semibold tracking-tight text-ink">
+            {value}
+          </p>
           {detail ? (
-            <p className="mt-0.5 line-clamp-2 text-xs text-slate-400">{detail}</p>
+            <p className="mt-0.5 line-clamp-2 text-xs text-ink-2">{detail}</p>
           ) : null}
         </div>
       </div>

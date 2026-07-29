@@ -53,24 +53,24 @@ export function ResourceCard({ resource }: { resource: ResourceItem }) {
               <Icon className="h-4 w-4" />
             </span>
             <ArrowUpRight
-              className="h-4 w-4 shrink-0 text-muted transition group-hover:text-solar-400"
+              className="h-4 w-4 shrink-0 text-ink-3 transition group-hover:text-fg-warn"
               aria-hidden="true"
             />
           </div>
 
-          <h3 className="text-sm font-semibold leading-snug text-slate-100">
+          <h3 className="text-sm font-semibold leading-snug text-ink">
             {resource.document_name}
           </h3>
 
           {resource.description ? (
-            <p className="mt-1.5 flex-1 text-xs leading-relaxed text-slate-400">
+            <p className="mt-1.5 flex-1 text-xs leading-relaxed text-ink-2">
               {resource.description}
             </p>
           ) : (
             <div className="flex-1" />
           )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1 border-t border-hairline pt-3 text-2xs text-muted">
+          <div className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1 border-t border-line pt-3 text-2xs text-ink-3">
             <span className="font-semibold uppercase tracking-wider">
               {resource.type}
             </span>
@@ -87,7 +87,7 @@ export function ResourceCard({ resource }: { resource: ResourceItem }) {
               </>
             ) : null}
             {resource.is_confidential ? (
-              <span className="ml-auto inline-flex items-center gap-1 text-muted">
+              <span className="ml-auto inline-flex items-center gap-1 text-ink-3">
                 <Lock className="h-3 w-3" aria-hidden="true" />
                 Confidential
               </span>
